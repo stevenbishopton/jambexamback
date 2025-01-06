@@ -9,7 +9,7 @@ import { Subject, Topic, Question } from './index.js';
 const app = express();
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? 'https://your-production-url.com' : 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production' ? 'https://thunderous-capybara-ec345d.netlify.app/' : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };
