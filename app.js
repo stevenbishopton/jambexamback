@@ -8,10 +8,22 @@ import { Subject, Topic, Question } from './index.js';
 
 const app = express();
 
+// Allowed origins for CORS
+const allowedOrigins = [
+  'https://thunderous-capybara-ec345d.netlify.app', // Production frontend URL
+  'http://localhost:5173', // Development frontend URL
+];
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? 'https://thunderous-capybara-ec345d.netlify.app/' : 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); 
+    } else {
+      callback(new Error('Not allowed by CORS')); 
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -22,11 +34,10 @@ app.use('/questions', questionRoutes);
 app.use('/topics', topicRoutes);
 app.use('/subjects', subjectRoutes);
 
-// Test the database connection
 sequelize.authenticate()
   .then(() => {
     console.log('Connection to the database has been established successfully.');
-    return sequelize.sync({ force: false });
+    return sequelize.sync({ force: false }); 
   })
   .then(() => {
     console.log('Database synchronized');
